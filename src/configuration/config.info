@@ -1,0 +1,6 @@
+// One round time in second
+oneRoundTime=900
+// Image (full file name under asset/map/ folder)
+map=testMap.jpg
+// Grids (height*width)
+grid=10*10
