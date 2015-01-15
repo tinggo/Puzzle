@@ -1,23 +1,15 @@
 package manager
 {
+
     import dataStructure.SingletonObj;
 
-    import flash.events.Event;
     import flash.events.EventDispatcher;
     import flash.utils.Dictionary;
-
-    import object.EventObject;
 
     public class EventManager extends SingletonObj
     {
         private static var m_instance:EventManager;
-
         private var m_dict:Dictionary = new Dictionary();
-
-        public function EventManager ()
-        {
-            super ();
-        }
 
         public static function getInstance():EventManager
         {
@@ -28,7 +20,12 @@ package manager
             return m_instance;
         }
 
-        public function addEventListener(target:EventDispatcher, type:String, callback:Function, para:Object):void
+        public function EventManager()
+        {
+            super();
+        }
+
+        public function addEventListener(target:EventDispatcher, type:String, callback:Function):void
         {
             if (!m_dict[target])
             {
@@ -53,31 +50,34 @@ package manager
                 var ew:EventWrapper = new EventWrapper();
                 ew.type = type;
                 ew.callback = callback;
-                ew.para = para;
                 eventArray.push(ew);
-                target.addEventListener(type, callbackHQ);
+                target.addEventListener(type, callback);
             }
         }
 
-        public function removeEventListener(target:EventDispatcher, type:String):void
+        public function removeEventListener(target:EventDispatcher, type:String, callback:Function):void
         {
-            // TODO
-        }
-
-        private function callbackHQ(e:Event):void
-        {
-            var target:Object = e.target;
-            var eventArray:Vector.<EventWrapper> = m_dict[target];
-            var eventArrayLength:int = eventArray.length;
-            for (var i:int = 0; i < eventArrayLength; ++i)
+            var eventList:Vector.<EventWrapper> = m_dict[target];
+            if (eventList)
             {
-                var type:String = eventArray[i].type;
-                if ( e.type == type)
+                var eventListLen:int = eventList.length;
+                for (var i:int = 0; i < eventListLen; ++i)
                 {
-                    eventArray[i].callback(new EventObject(e, eventArray[i].para));
+                    var ew:EventWrapper = eventList[i];
+                    if (ew.type == type && ew.callback == callback)
+                    {
+                        target.removeEventListener(type, callback);
+                        eventList.splice(i, 1);
+                        if (eventList.length == 0)
+                        {
+                            delete m_dict[target];
+                        }
+                        break;
+                    }
                 }
             }
         }
+
     }
 }
 
@@ -85,5 +85,4 @@ class EventWrapper
 {
     public var type:String;
     public var callback:Function;
-    public var para:Object;
 }
