@@ -1,6 +1,5 @@
 package manager
 {
-
     import dataStructure.SingletonObj;
 
     import flash.events.EventDispatcher;

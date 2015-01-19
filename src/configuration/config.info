@@ -4,3 +4,7 @@ oneRoundTime=900
 map=testMap.jpg
 // Grids (height*width)
 grid=10*10
+// Initialize money
+money=500
+// Purchase fees
+fee=100

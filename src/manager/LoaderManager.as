@@ -37,12 +37,13 @@ package manager
             if (!isLoading(url))
             {
                 var loadTask:LoadTask = new LoadTask();
+                var urlLoader:URLLoader = new URLLoader();
                 loadTask.url = url;
                 loadTask.type = type;
                 loadTask.callback = callback;
+                loadTask.loaderObj = urlLoader;
                 loadQueue.push(loadTask);
 
-                var urlLoader:URLLoader = new URLLoader();
                 urlLoader.addEventListener(IOErrorEvent.IO_ERROR, onLoadFileError);
                 urlLoader.addEventListener(Event.COMPLETE, onLoadFileComplete);
                 urlLoader.load(new URLRequest(url));
@@ -53,21 +54,42 @@ package manager
         {
             var loader:URLLoader = (event.target as URLLoader);
             var content:String = loader.data as String;
+            var loaderCount:int = loadQueue.length;
+            for (var i:int = 0; i < loaderCount; ++i)
+            {
+                if (loadQueue[i].loaderObj == loader)
+                {
+                    var callback:Function = loadQueue[i].callback;
+                    if (callback != null)
+                    {
+                        callback(content);
+                    }
+                    break;
+                }
+            }
             loader.close();
-            cleanupLoader();
+            cleanupLoader(loader);
         }
 
         private function onLoadFileError(event:IOErrorEvent):void
         {
             var loader:URLLoader = (event.target as URLLoader);
-            trace(event.toString());
             loader.close();
-            cleanupLoader();
+            cleanupLoader(loader);
         }
 
-        private function cleanupLoader():void
+        private function cleanupLoader(loader:Object):void
         {
-
+            var loadQueueLen:int = loadQueue.length;
+            for (var i:int = 0; i < loadQueueLen; ++i)
+            {
+                if (loadQueue[i].loaderObj == loader)
+                {
+                    loadQueue[i].callback = null;
+                    loadQueue.splice(i, 1);
+                    break;
+                }
+            }
         }
 
         private function isLoading(url:String):Boolean
@@ -87,6 +109,7 @@ package manager
 
 class LoadTask
 {
+    public var loaderObj:Object;
     public var url:String;
     public var type:String;
     public var callback:Function;
