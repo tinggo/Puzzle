@@ -2,7 +2,14 @@ package manager
 {
     import dataStructure.SingletonObj;
 
-    import flash.events.Event;
+import flash.display.Bitmap;
+
+import flash.display.BitmapData;
+
+import flash.display.Loader;
+import flash.display.LoaderInfo;
+
+import flash.events.Event;
     import flash.events.IOErrorEvent;
 
     import flash.net.URLLoader;
@@ -10,10 +17,12 @@ package manager
     import flash.net.URLRequest;
 
 
+
     public class LoaderManager extends SingletonObj
     {
         public static const LOAD_DATA_FORMAT_TEXT:String = URLLoaderDataFormat.TEXT;
         public static const LOAD_DATA_FORMAT_BINARY:String = URLLoaderDataFormat.BINARY;
+        public static const LOAD_DATA_FORMAT_BITMAP:String = "load_data_bitmap";
 
         private static var s_instance:LoaderManager;
         private var loadQueue:Vector.<LoadTask> = new Vector.<LoadTask>();
@@ -34,20 +43,54 @@ package manager
 
         public function loadFile(url:String, type:String, callback:Function = null):void
         {
+
             if (!isLoading(url))
             {
                 var loadTask:LoadTask = new LoadTask();
-                var urlLoader:URLLoader = new URLLoader();
+
                 loadTask.url = url;
                 loadTask.type = type;
                 loadTask.callback = callback;
-                loadTask.loaderObj = urlLoader;
-                loadQueue.push(loadTask);
+                if (type == LOAD_DATA_FORMAT_TEXT || type == LOAD_DATA_FORMAT_BINARY)
+                {
+                    var urlLoader:URLLoader = new URLLoader();
+                    loadTask.loaderObj = urlLoader;
+                    urlLoader.addEventListener(IOErrorEvent.IO_ERROR, onLoadFileError);
+                    urlLoader.addEventListener(Event.COMPLETE, onLoadFileComplete);
+                    urlLoader.load(new URLRequest(url));
+                }
+                else if (type == LOAD_DATA_FORMAT_BITMAP)
+                {
+                    var loader:Loader = new Loader();
+                    loadTask.loaderObj = loader;
+                    loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadFileError);
+                    loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onBitmapLoadComplete);
+                    loader.load(new URLRequest(url));
 
-                urlLoader.addEventListener(IOErrorEvent.IO_ERROR, onLoadFileError);
-                urlLoader.addEventListener(Event.COMPLETE, onLoadFileComplete);
-                urlLoader.load(new URLRequest(url));
+                }
+                loadQueue.push(loadTask);
             }
+        }
+
+        private function onBitmapLoadComplete(event:Event):void
+        {
+            var loaderInfo:LoaderInfo = event.target as LoaderInfo;
+            var loader:Loader = loaderInfo.loader;
+            var bitmap:Bitmap = loader.content as Bitmap;
+            var loaderCount:int = loadQueue.length;
+            for (var i:int = 0; i < loaderCount; ++i)
+            {
+                if (loadQueue[i].loaderObj == loader)
+                {
+                    var callback:Function = loadQueue[i].callback;
+                    if (callback != null)
+                    {
+                        callback(bitmap);
+                    }
+                    break;
+                }
+            }
+            cleanupLoader(loader);
         }
 
         private function onLoadFileComplete(event:Event):void
@@ -73,9 +116,18 @@ package manager
 
         private function onLoadFileError(event:IOErrorEvent):void
         {
-            var loader:URLLoader = (event.target as URLLoader);
-            loader.close();
-            cleanupLoader(loader);
+            if (event.target as URLLoader)
+            {
+                var loader:URLLoader = (event.target as URLLoader);
+                loader.close();
+                cleanupLoader(loader);
+            }
+            else if (event.target as Loader)
+            {
+                var bitmapLoader:Loader = (event.target as Loader);
+                bitmapLoader.close();
+                cleanupLoader(bitmapLoader);
+            }
         }
 
         private function cleanupLoader(loader:Object):void

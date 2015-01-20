@@ -1,9 +1,12 @@
 package
 {
-    import flash.display.Sprite;
+import flash.display.Bitmap;
+import flash.display.Sprite;
     import flash.events.Event;
 
-    import manager.ConfigManager;
+import manager.AssetManager;
+
+import manager.ConfigManager;
 
     [SWF(width="1280" , height="960" , backgroundColor="#000000" , frameRate=30)]
     public class Puzzle extends Sprite
@@ -25,10 +28,18 @@ package
         {
             // Load config file
             ConfigManager.getInstance().loadConfig();
-            // TODO: load assets
+
+            AssetManager.getInstance().load(["asset/map/world.jpg"], bitmapLoadComplete);
+
             // TODO: Load sfx
             // TODO: Init game scene
             // TODO: Start game work flow
+        }
+
+        private function bitmapLoadComplete():void
+        {
+            var bitmap:Bitmap = AssetManager.getInstance().getBitmap("asset/map/world.jpg");
+            addChild(bitmap);
         }
     }
 }
