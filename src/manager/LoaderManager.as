@@ -1,6 +1,6 @@
 package manager
 {
-    import dataStructure.SingletonObj;
+    import manager.BaseManager;
 
 import flash.display.Bitmap;
 
@@ -18,7 +18,7 @@ import flash.events.Event;
 
 
 
-    public class LoaderManager extends SingletonObj
+    public class LoaderManager extends BaseManager
     {
         public static const LOAD_DATA_FORMAT_TEXT:String = URLLoaderDataFormat.TEXT;
         public static const LOAD_DATA_FORMAT_BINARY:String = URLLoaderDataFormat.BINARY;

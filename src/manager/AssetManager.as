@@ -1,12 +1,12 @@
 package manager
 {
-    import dataStructure.SingletonObj;
+    import manager.BaseManager;
 
     import flash.display.Bitmap;
 
     import flash.utils.Dictionary;
 
-    public class AssetManager extends SingletonObj
+    public class AssetManager extends BaseManager
     {
         private static var s_instance:AssetManager;
 

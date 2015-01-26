@@ -1,11 +1,11 @@
 package manager
 {
-    import dataStructure.SingletonObj;
+    import manager.BaseManager;
 
     import flash.events.EventDispatcher;
     import flash.utils.Dictionary;
 
-    public class EventManager extends SingletonObj
+    public class EventManager extends BaseManager
     {
         private static var m_instance:EventManager;
         private var m_dict:Dictionary = new Dictionary();

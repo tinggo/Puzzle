@@ -1,8 +1,8 @@
 package manager
 {
-    import dataStructure.SingletonObj;
+    import manager.BaseManager;
 
-    public class ConfigManager extends SingletonObj
+    public class ConfigManager extends BaseManager
     {
         public var oneRoundTime:int;
         public var map:String;
