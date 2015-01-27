@@ -8,6 +8,7 @@ package
 
     import manager.AssetManager;
     import manager.ConfigManager;
+    import manager.GameManager;
     import manager.SceneManager;
 
     [SWF(width="1280", height="720", backgroundColor="#000000", frameRate=30)]
@@ -35,8 +36,7 @@ package
 
         private function bitmapLoadComplete():void
         {
-            var bitmap:Bitmap = AssetManager.getInstance().getBitmap("asset/map/world.jpg");
-            addChild(bitmap);
+            onResourceLoadComplete();
         }
 
         private function onAddedToStage(e:Event):void
@@ -45,6 +45,11 @@ package
             stage.scaleMode = StageScaleMode.EXACT_FIT;
             stage.align = StageAlign.TOP;
             this.init();
+        }
+
+        private function onResourceLoadComplete():void
+        {
+            GameManager.getInstance().init();
         }
     }
 }

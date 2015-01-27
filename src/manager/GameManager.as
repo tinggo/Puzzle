@@ -2,6 +2,10 @@ package manager
 {
     import manager.BaseManager;
 
+    import module.FragmentModule;
+
+    import object.Fragment;
+
     public class GameManager extends BaseManager
     {
         public static var GAME_STATE_INTRO:int = 0;
@@ -12,9 +16,12 @@ package manager
 
         private var _state:int = GAME_STATE_INTRO;
 
+        private var _fragmentModule:FragmentModule;
+
         public function GameManager()
         {
             super();
+            _fragmentModule = new FragmentModule();
         }
 
         public static function getInstance():GameManager
@@ -24,6 +31,11 @@ package manager
                 _instance = new GameManager();
             }
             return _instance;
+        }
+
+        public function init():void
+        {
+            _fragmentModule.init();
         }
 
         public function resetGame():void
