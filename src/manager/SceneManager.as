@@ -1,8 +1,13 @@
 package manager
 {
+    import event.GameEvent;
+    import event.ParaEvent;
+
     import manager.BaseManager;
 
     import flash.display.Stage;
+
+    import object.Fragment;
 
     import object.GameLayer;
 
@@ -16,9 +21,9 @@ package manager
 
         private static var _instance:SceneManager;
 
-        private var _gameLayer:SceneLayer;
+        private var _gameLayer:GameLayer;
         private var _uiLayer:SceneLayer;
-        private var _hudLayer:SceneLayer;
+        private var _hudLayer:HUDLayer;
 
         public function SceneManager()
         {
@@ -46,11 +51,23 @@ package manager
 
             _gameLayer.init();
             _hudLayer.init();
+
+            m_em.addEventListener(GameManager.getInstance(), GameEvent.GAME_STATE_CHANGED, onGameStateChanged);
         }
 
         private function addLayer(layer:SceneLayer):void
         {
             s_stage.addChild(layer);
+        }
+
+        private function onGameStateChanged(e:ParaEvent):void
+        {
+            var data:Object = e._para;
+            if (data.curState == GameManager.GAME_STATE_GAME)
+            {
+                var oneBatchFragment:Vector.<Fragment> = GameManager.getInstance().getOneBatchFragment();
+                _gameLayer.addNewFragments(oneBatchFragment);
+            }
         }
 
     }

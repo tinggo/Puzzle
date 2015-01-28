@@ -2,7 +2,7 @@ package object
 {
     public class HUDLayer extends SceneLayer
     {
-        private var _playground:playground;
+        private var _timeBar:timeBar;
 
         public function HUDLayer()
         {
@@ -11,8 +11,8 @@ package object
 
         override public function init():void
         {
-            _playground = new playground();
-            addChild(_playground);
+            _timeBar = new timeBar();
+            addChild(_timeBar);
         }
     }
 }

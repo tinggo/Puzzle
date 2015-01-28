@@ -8,3 +8,5 @@ grid=10*10
 money=500
 // Purchase fees
 fee=100
+// per time fragment count
+perTimeFragmentCount=10

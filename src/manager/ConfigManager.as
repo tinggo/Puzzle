@@ -10,6 +10,7 @@ package manager
         public var gridY:int;
         public var money:int;
         public var fee:int;
+        public var perTimeFragmentCount:int;
 
         private static var s_instance:ConfigManager;
 
@@ -73,6 +74,9 @@ package manager
                     break;
                 case "fee":
                     this.fee = int(value);
+                    break;
+                case "perTimeFragmentCount":
+                    this.perTimeFragmentCount = int(value);
                     break;
             }
         }

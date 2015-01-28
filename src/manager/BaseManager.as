@@ -5,13 +5,14 @@ package manager
     public class BaseManager extends EventDispatcher
     {
         private var m_created:Boolean = false;
+        protected var m_em:EventManager;
 
         public function BaseManager ()
         {
             if (!m_created)
             {
+                m_em = new EventManager();
                 m_created = true;
-
             }
             else
             {
@@ -19,5 +20,6 @@ package manager
                 throw(e);
             }
         }
+
     }
 }

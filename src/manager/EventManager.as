@@ -1,11 +1,9 @@
 package manager
 {
-    import manager.BaseManager;
-
     import flash.events.EventDispatcher;
     import flash.utils.Dictionary;
 
-    public class EventManager extends BaseManager
+    public class EventManager
     {
         private static var m_instance:EventManager;
         private var m_dict:Dictionary = new Dictionary();

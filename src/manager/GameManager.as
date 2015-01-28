@@ -1,5 +1,7 @@
 package manager
 {
+    import event.GameEvent;
+
     import manager.BaseManager;
 
     import module.FragmentModule;
@@ -40,7 +42,8 @@ package manager
 
         public function resetGame():void
         {
-            jumpToState(GAME_STATE_INTRO);
+            //jumpToState(GAME_STATE_INTRO);
+            jumpToState(GAME_STATE_GAME);
         }
 
         private function jumpToState(state:int):void
@@ -59,7 +62,15 @@ package manager
             {
 
             }
+            var data:Object = {prevState:_state, curState:state};
             _state = state;
+
+            dispatchEvent(new GameEvent(GameEvent.GAME_STATE_CHANGED, data));
+        }
+
+        public function getOneBatchFragment():Vector.<Fragment>
+        {
+            return _fragmentModule.getOneBatchFragment();
         }
 
     }

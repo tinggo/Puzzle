@@ -2,6 +2,7 @@ package object
 {
     import flash.display.Sprite;
     import flash.events.MouseEvent;
+    import flash.geom.Rectangle;
 
     public class Fragment extends Sprite
     {
@@ -12,6 +13,8 @@ package object
 
         private var _orderedX:int;
         private var _orderedY:int;
+
+        private var _onStage:Boolean = false;
 
         public function Fragment()
         {
@@ -55,6 +58,16 @@ package object
             return _orderedY;;
         }
 
+        public function get onStage():Boolean
+        {
+            return _onStage;
+        }
+
+        public function set onStage(value:Boolean):void
+        {
+            _onStage = value;
+        }
+
         private function onMouseDown(e:MouseEvent):void
         {
 
@@ -71,6 +84,11 @@ package object
         }
 
         public function switchDrag(value:Boolean):void
+        {
+
+        }
+
+        public function setDragRectangle(area:Rectangle):void
         {
 
         }

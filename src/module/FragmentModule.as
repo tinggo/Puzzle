@@ -2,7 +2,6 @@ package module
 {
     import flash.display.Bitmap;
     import flash.display.BitmapData;
-    import flash.display.Sprite;
     import flash.geom.Point;
     import flash.geom.Rectangle;
 
@@ -16,10 +15,12 @@ package module
         private static const RAW_TEXTURE_PATH:String = "asset/map/world.jpg";
 
         private var _fragments:Vector.<Fragment>;
+        private var _freeFragments:Vector.<Fragment>;
 
         public function FragmentModule()
         {
             _fragments = new Vector.<Fragment>();
+            _freeFragments = new Vector.<Fragment>();
         }
 
         public function init():void
@@ -30,6 +31,8 @@ package module
         private function generateFragments():void
         {
             var bitmap:Bitmap = AssetManager.getInstance().getBitmap(RAW_TEXTURE_PATH);
+            var fragmentScaleX:Number = 920 / bitmap.width;
+            var fragmentScaleY:Number = 620 / bitmap.height;
             var sourceBitmapData:BitmapData = bitmap.bitmapData;
             var gridX:int = ConfigManager.getInstance().gridX;
             var gridY:int = ConfigManager.getInstance().gridY;
@@ -51,7 +54,10 @@ package module
                 var aFragment:Fragment = new Fragment();
                 aFragment.setOrderedPosition(xIndex, yIndex);
                 aFragment.addChild(fragmentBp);
+                aFragment.scaleX = fragmentScaleX;
+                aFragment.scaleY = fragmentScaleY;
                 _fragments.push(aFragment);
+                _freeFragments.push(aFragment);
             }
         }
 
@@ -64,6 +70,32 @@ package module
             return null;
         }
 
+        public function getAllFragments():Vector.<Fragment>
+        {
+            return _fragments;
+        }
+
+        public function getOneBatchFragment():Vector.<Fragment>
+        {
+            var perFragmentCount:int = ConfigManager.getInstance().perTimeFragmentCount;
+
+            var selectedFragment:Vector.<Fragment> = new Vector.<Fragment>();
+            for (var i:int = 0; i < perFragmentCount; ++i)
+            {
+                var freeFragmentCount:int = _freeFragments.length;
+                if (freeFragmentCount > 0)
+                {
+                    var selectedIndex:int = Math.random() * 100 % freeFragmentCount;
+                    selectedFragment.push(_freeFragments[selectedIndex]);
+                    _freeFragments.splice(selectedIndex, 1);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return selectedFragment;
+        }
 
     }
 }

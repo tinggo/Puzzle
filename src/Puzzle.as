@@ -1,6 +1,5 @@
 package
 {
-    import flash.display.Bitmap;
     import flash.display.Sprite;
     import flash.display.StageAlign;
     import flash.display.StageScaleMode;
@@ -11,7 +10,7 @@ package
     import manager.GameManager;
     import manager.SceneManager;
 
-    [SWF(width="1280", height="720", backgroundColor="#000000", frameRate=30)]
+    [SWF(width="1280", height="720", backgroundColor="#666666", frameRate=30)]
     public class Puzzle extends Sprite
     {
         public function Puzzle()
@@ -50,6 +49,7 @@ package
         private function onResourceLoadComplete():void
         {
             GameManager.getInstance().init();
+            GameManager.getInstance().resetGame();
         }
     }
 }
