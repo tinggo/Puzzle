@@ -12,6 +12,7 @@ package manager
     import object.GameLayer;
 
     import object.HUDLayer;
+    import object.MenuLayer;
 
     import object.SceneLayer;
 
@@ -22,7 +23,7 @@ package manager
         private static var _instance:SceneManager;
 
         private var _gameLayer:GameLayer;
-        private var _uiLayer:SceneLayer;
+        private var _uiLayer:MenuLayer;
         private var _hudLayer:HUDLayer;
 
         public function SceneManager()
@@ -43,7 +44,7 @@ package manager
         {
             _gameLayer = new GameLayer();
             _hudLayer = new HUDLayer();
-            _uiLayer = new SceneLayer();
+            _uiLayer = new MenuLayer();
 
             addLayer(_gameLayer);
             addLayer(_hudLayer);
@@ -62,8 +63,13 @@ package manager
 
         private function onGameStateChanged(e:ParaEvent):void
         {
-            var data:Object = e._para;
-            if (data.curState == GameManager.GAME_STATE_GAME)
+            var data:Object = e.myPara;
+            _uiLayer.onStageChanged(data.curState);
+            if (data.curState == GameManager.GAME_STATE_INTRO)
+            {
+
+            }
+            else if (data.curState == GameManager.GAME_STATE_GAME)
             {
                 var oneBatchFragment:Vector.<Fragment> = GameManager.getInstance().getOneBatchFragment();
                 _gameLayer.addNewFragments(oneBatchFragment);

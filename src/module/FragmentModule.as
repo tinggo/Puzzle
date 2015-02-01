@@ -31,8 +31,8 @@ package module
         private function generateFragments():void
         {
             var bitmap:Bitmap = AssetManager.getInstance().getBitmap(RAW_TEXTURE_PATH);
-            var fragmentScaleX:Number = 920 / bitmap.width;
-            var fragmentScaleY:Number = 620 / bitmap.height;
+            var fragmentScaleX:Number = ConfigManager.AREA_WIDTH / bitmap.width;
+            var fragmentScaleY:Number = ConfigManager.AREA_HEIGHT / bitmap.height;
             var sourceBitmapData:BitmapData = bitmap.bitmapData;
             var gridX:int = ConfigManager.getInstance().gridX;
             var gridY:int = ConfigManager.getInstance().gridY;

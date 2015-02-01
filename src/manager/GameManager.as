@@ -1,12 +1,14 @@
 package manager
 {
     import event.GameEvent;
+    import event.ParaEvent;
 
-    import manager.BaseManager;
+    import menu.LoginMenu;
 
     import module.FragmentModule;
 
     import object.Fragment;
+    import object.Grid;
 
     public class GameManager extends BaseManager
     {
@@ -19,6 +21,7 @@ package manager
         private var _state:int = GAME_STATE_INTRO;
 
         private var _fragmentModule:FragmentModule;
+        private var _grids:Vector.<Grid> = new Vector.<Grid>();
 
         public function GameManager()
         {
@@ -38,12 +41,42 @@ package manager
         public function init():void
         {
             _fragmentModule.init();
+            initGrids();
+
+            Broadcaster.getInstance().addEventListener(LoginMenu.EVENT_LOGIN, onLogin);
         }
 
         public function resetGame():void
         {
-            //jumpToState(GAME_STATE_INTRO);
-            jumpToState(GAME_STATE_GAME);
+            jumpToState(GAME_STATE_INTRO);
+            //jumpToState(GAME_STATE_GAME);
+        }
+
+        private function initGrids():void
+        {
+            var gridX:int = ConfigManager.getInstance().gridX;
+            var gridY:int = ConfigManager.getInstance().gridY;
+            var totalCount:int = gridX * gridY;
+            var perWidth:Number = Math.floor(ConfigManager.AREA_WIDTH) / gridX;
+            var perHeight:Number = Math.floor(ConfigManager.AREA_HEIGHT) / gridY;
+
+            for (var i:int = 0; i < totalCount; ++i)
+            {
+                var grid:Grid = new Grid();
+                grid.indexX = Math.floor(i % gridX);
+                grid.indexY = Math.floor(i / gridY);
+                grid.posX =  ConfigManager.AREA_X + grid.indexX * perWidth;
+                grid.posY = ConfigManager.AREA_Y + grid.indexY * perHeight;
+                grid.width = perWidth;
+                grid.height = perHeight;
+                grid.fragment = null;
+                _grids.push(grid);
+            }
+        }
+
+        public function getGrids():Vector.<Grid>
+        {
+            return _grids;
         }
 
         private function jumpToState(state:int):void
@@ -52,6 +85,7 @@ package manager
             {
                 // TODO reset time / reset money
                 // TODO show intro menu
+
                 // TODO clean playground
             }
             else if (state == GAME_STATE_GAME)
@@ -71,6 +105,14 @@ package manager
         public function getOneBatchFragment():Vector.<Fragment>
         {
             return _fragmentModule.getOneBatchFragment();
+        }
+
+        private function onLogin(e:ParaEvent):void
+        {
+            var obj:Object = e.myPara;
+            PlayerManager.getInstance().playerName = obj.name;
+            PlayerManager.getInstance().playerSex = obj.isMale ? 1 : 0;
+            jumpToState(GAME_STATE_GAME);
         }
 
     }

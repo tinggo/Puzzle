@@ -4,6 +4,14 @@ package manager
 
     public class ConfigManager extends BaseManager
     {
+        public static const AREA_WIDTH:int = 920;
+        public static const AREA_HEIGHT:int = 620;
+        public static const POOL_X:int = 18;
+        public static const POOL_Y:int = 62;
+        public static const AREA_X:int = 332;
+        public static const AREA_Y:int = 62;
+
+
         public var oneRoundTime:int;
         public var map:String;
         public var gridX:int;
