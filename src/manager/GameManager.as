@@ -44,6 +44,7 @@ package manager
             initGrids();
 
             Broadcaster.getInstance().addEventListener(LoginMenu.EVENT_LOGIN, onLogin);
+            Broadcaster.getInstance().addEventListener(GameEvent.BUY_FRAGMENTS, onBuyFragment);
         }
 
         public function resetGame():void
@@ -79,6 +80,38 @@ package manager
             return _grids;
         }
 
+        public function validateIfSuccess():void
+        {
+            var isSuccess:Boolean = true;
+            for (var i:int = 0; i < _grids.length; ++i)
+            {
+                var fragment:Fragment = _grids[i].fragment;
+                if (!fragment)
+                {
+                    isSuccess = false;
+                    break;
+                }
+                else
+                {
+                    if (_grids[i].indexX != fragment.getOrderedX() || _grids[i].indexY != fragment.getOrderedY())
+                    {
+                        isSuccess = false;
+                        break;
+                    }
+                }
+            }
+
+            if (isSuccess)
+            {
+                jumpToState(GAME_STATE_END);
+            }
+        }
+
+        private function missionComplete():void
+        {
+            // reset
+        }
+
         private function jumpToState(state:int):void
         {
             if (state == GAME_STATE_INTRO)
@@ -94,7 +127,7 @@ package manager
             }
             else if (state == GAME_STATE_END)
             {
-
+                SceneManager.getInstance().showMsg("Mission Accomplish!", 1, ["OK"], [missionComplete]);
             }
             var data:Object = {prevState:_state, curState:state};
             _state = state;
@@ -112,7 +145,30 @@ package manager
             var obj:Object = e.myPara;
             PlayerManager.getInstance().playerName = obj.name;
             PlayerManager.getInstance().playerSex = obj.isMale ? 1 : 0;
+            PlayerManager.getInstance().money = ConfigManager.getInstance().money;
+            SceneManager.getInstance().updateMoney(PlayerManager.getInstance().money);
+            PlayerManager.getInstance().playedTime = 0;
             jumpToState(GAME_STATE_GAME);
+        }
+
+        private function onBuyFragment(e:GameEvent):void
+        {
+            var perTimePurchase:int = ConfigManager.getInstance().perTimePurchase;
+            if (perTimePurchase <= PlayerManager.getInstance().money)
+            {
+                PlayerManager.getInstance().money -= perTimePurchase;
+                SceneManager.getInstance().updateMoney(PlayerManager.getInstance().money);
+                SceneManager.getInstance().addOneBatchOfFragment();
+            }
+            else
+            {
+                SceneManager.getInstance().showMsg("Insufficient Funds", 1, ["OK"], [okClicked]);
+            }
+        }
+
+        private function okClicked():void
+        {
+            SceneManager.getInstance().hideMsg();
         }
 
     }

@@ -19,6 +19,7 @@ package manager
         public var money:int;
         public var fee:int;
         public var perTimeFragmentCount:int;
+        public var perTimePurchase:int;
 
         private static var s_instance:ConfigManager;
 
@@ -85,6 +86,9 @@ package manager
                     break;
                 case "perTimeFragmentCount":
                     this.perTimeFragmentCount = int(value);
+                    break;
+                case "perTimePurchase":
+                    this.perTimePurchase = int(value);
                     break;
             }
         }

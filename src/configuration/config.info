@@ -3,10 +3,12 @@ oneRoundTime=900
 // Image (full file name under asset/map/ folder)
 map=testMap.jpg
 // Grids (height*width)
-grid=10*10
+grid=4*4
 // Initialize money
-money=500
+money=100
 // Purchase fees
 fee=100
 // per time fragment count
 perTimeFragmentCount=10
+// per time purchase cost
+perTimePurchase=10

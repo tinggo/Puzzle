@@ -5,6 +5,8 @@ package object
     import flash.display.MovieClip;
     import flash.geom.Rectangle;
 
+    import manager.Broadcaster;
+
     import manager.ConfigManager;
     import manager.GameManager;
 
@@ -120,6 +122,7 @@ package object
                     fragment.currentY = Fragment.INVALID_VALUE;
                 }
             }
+            GameManager.getInstance().validateIfSuccess();
         }
 
         private function onFragmentSelected(e:ParaEvent):void

@@ -7,6 +7,7 @@ package manager
         public var playerName:String = "Anonymous";
         public var playerSex:int;
         public var playedTime:int = 0;
+        public var money:int;
 
         public function PlayerManager()
         {

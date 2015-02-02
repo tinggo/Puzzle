@@ -71,9 +71,29 @@ package manager
             }
             else if (data.curState == GameManager.GAME_STATE_GAME)
             {
-                var oneBatchFragment:Vector.<Fragment> = GameManager.getInstance().getOneBatchFragment();
-                _gameLayer.addNewFragments(oneBatchFragment);
+                addOneBatchOfFragment();
             }
+        }
+
+        public function addOneBatchOfFragment():void
+        {
+            var oneBatchFragment:Vector.<Fragment> = GameManager.getInstance().getOneBatchFragment();
+            _gameLayer.addNewFragments(oneBatchFragment);
+        }
+
+        public function showMsg(message:String, btnCount:int, label:Array, callback:Array):void
+        {
+            _uiLayer.showPopup(message, btnCount, label, callback);
+        }
+
+        public function hideMsg():void
+        {
+            _uiLayer.hidePopup();
+        }
+
+        public function updateMoney(value:int):void
+        {
+             _hudLayer.updateMoney(value);
         }
 
     }
