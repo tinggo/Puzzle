@@ -28,6 +28,20 @@ package module
             generateFragments();
         }
 
+        public function reset():void
+        {
+            _freeFragments.splice(0, _freeFragments.length);
+            for (var i:int = 0; i < _fragments.length; ++i)
+            {
+                _fragments[i].reset();
+                _freeFragments.push(_fragments[i]);
+                if (_fragments[i].parent)
+                {
+                    _fragments[i].parent.removeChild(_fragments[i]);
+                }
+            }
+        }
+
         private function generateFragments():void
         {
             var bitmap:Bitmap = AssetManager.getInstance().getBitmap(RAW_TEXTURE_PATH);

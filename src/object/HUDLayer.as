@@ -50,5 +50,10 @@ package object
         {
             _timeBar.mcMoney.text = "Money:" + String(value);
         }
+
+        public function setTime(time:String):void
+        {
+            _timeBar.mcTime.text = time;
+        }
     }
 }

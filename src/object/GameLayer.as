@@ -5,14 +5,9 @@ package object
     import flash.display.MovieClip;
     import flash.geom.Rectangle;
 
-    import manager.Broadcaster;
-
     import manager.ConfigManager;
     import manager.GameManager;
-
     import manager.SceneManager;
-
-    import object.Fragment;
 
     public class GameLayer extends SceneLayer
     {
@@ -52,7 +47,6 @@ package object
             _playArea.y = _playArea.y;
             _playArea.width = _playArea.width;
             _playArea.height = _playArea.height;
-
         }
 
         public function addNewFragments(fragments:Vector.<Fragment>):void

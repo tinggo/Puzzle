@@ -96,5 +96,10 @@ package manager
              _hudLayer.updateMoney(value);
         }
 
+        public function setTime(str:String):void
+        {
+            _hudLayer.setTime(str);
+        }
+
     }
 }

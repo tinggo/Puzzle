@@ -3,6 +3,10 @@ package manager
     import event.GameEvent;
     import event.ParaEvent;
 
+    import flash.events.TimerEvent;
+
+    import flash.utils.Timer;
+
     import menu.LoginMenu;
 
     import module.FragmentModule;
@@ -22,6 +26,8 @@ package manager
 
         private var _fragmentModule:FragmentModule;
         private var _grids:Vector.<Grid> = new Vector.<Grid>();
+
+        private var _timer:Timer;
 
         public function GameManager()
         {
@@ -43,14 +49,22 @@ package manager
             _fragmentModule.init();
             initGrids();
 
+            _timer = new Timer(1000);
+            _timer.addEventListener(TimerEvent.TIMER, onTimerTick);
+
             Broadcaster.getInstance().addEventListener(LoginMenu.EVENT_LOGIN, onLogin);
             Broadcaster.getInstance().addEventListener(GameEvent.BUY_FRAGMENTS, onBuyFragment);
         }
 
         public function resetGame():void
         {
+            for (var i:int = 0; i < _grids.length; ++i)
+            {
+                _grids[i].fragment = null;
+            }
+            _fragmentModule.reset();
             jumpToState(GAME_STATE_INTRO);
-            //jumpToState(GAME_STATE_GAME);
+
         }
 
         private function initGrids():void
@@ -109,24 +123,25 @@ package manager
 
         private function missionComplete():void
         {
-            // reset
+            SceneManager.getInstance().hideMsg();
+            resetGame();
         }
 
         private function jumpToState(state:int):void
         {
             if (state == GAME_STATE_INTRO)
             {
-                // TODO reset time / reset money
-                // TODO show intro menu
-
-                // TODO clean playground
+                SceneManager.getInstance().setTime("00:00");
+                SceneManager.getInstance().updateMoney(ConfigManager.getInstance().money);
             }
             else if (state == GAME_STATE_GAME)
             {
-
+                _timer.reset();
+                _timer.start();
             }
             else if (state == GAME_STATE_END)
             {
+                _timer.stop();
                 SceneManager.getInstance().showMsg("Mission Accomplish!", 1, ["OK"], [missionComplete]);
             }
             var data:Object = {prevState:_state, curState:state};
@@ -169,6 +184,25 @@ package manager
         private function okClicked():void
         {
             SceneManager.getInstance().hideMsg();
+        }
+
+        private function onTimerTick(e:TimerEvent):void
+        {
+            var currentSecond:int = (e.target as Timer).currentCount;
+            var min:int = Math.floor(currentSecond / 60);
+            var sec:int = currentSecond % 60;
+            var minStr:String = String(min);
+            var secStr:String = String(sec);
+            if (minStr.length == 1)
+            {
+                minStr = "0" + minStr;
+            }
+            if (secStr.length == 1)
+            {
+                secStr = "0" + secStr;
+            }
+            var time:String = minStr + ":" + secStr;
+            SceneManager.getInstance().setTime(time);
         }
 
     }

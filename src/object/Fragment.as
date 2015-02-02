@@ -34,14 +34,17 @@ package object
         public function Fragment()
         {
             super();
-            _currentX = INVALID_VALUE;
-            _currentY = INVALID_VALUE;
-            _orderedX = INVALID_VALUE;
-            _orderedY = INVALID_VALUE;
-            _gridIndex = INVALID_VALUE;
 
+            reset();
             this.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
             this.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+        }
+
+        public function reset():void
+        {
+            _currentX = INVALID_VALUE;
+            _currentY = INVALID_VALUE;
+            _gridIndex = INVALID_VALUE;
         }
 
         public function isInCorrectPosition():Boolean
