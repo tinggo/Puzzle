@@ -5,6 +5,8 @@ package object
     import flash.display.Sprite;
     import flash.events.MouseEvent;
     import flash.geom.Point;
+    import flash.geom.Point;
+    import flash.geom.Point;
     import flash.geom.Rectangle;
 
     import manager.SceneManager;
@@ -132,11 +134,6 @@ package object
                 this.y = _dragArea.height - this.height;
             }
 
-            if (e.stageX < 0 || e.stageX > SceneManager.s_stage.stageWidth ||
-                e.stageY < 0 || e.stageY >SceneManager.s_stage.stageHeight)
-            {
-                tryStopDrag();
-            }
         }
 
         public function switchDrag(value:Boolean):void

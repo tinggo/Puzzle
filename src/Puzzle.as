@@ -8,6 +8,7 @@ package
     import manager.AssetManager;
     import manager.ConfigManager;
     import manager.GameManager;
+    import manager.LogManager;
     import manager.SceneManager;
 
     [SWF(width="1280", height="720", backgroundColor="#666666", frameRate=30)]

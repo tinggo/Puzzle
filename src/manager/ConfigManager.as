@@ -13,11 +13,11 @@ package manager
 
 
         public var oneRoundTime:int;
-        public var map:String;
         public var gridX:int;
         public var gridY:int;
         public var money:int;
         public var fee:int;
+        public var initFragmentCount:int;
         public var perTimeFragmentCount:int;
         public var perTimePurchase:int;
 
@@ -71,9 +71,6 @@ package manager
                 case "oneRoundTime":
                     this.oneRoundTime = int(value);
                     break;
-                case "map":
-                    this.map = value;
-                    break;
                 case "grid":
                     this.gridY = int(value.split("*")[0]);
                     this.gridX = int(value.split("*")[1]);
@@ -89,6 +86,9 @@ package manager
                     break;
                 case "perTimePurchase":
                     this.perTimePurchase = int(value);
+                    break;
+                case "initFragmentCount":
+                    this.initFragmentCount = int(value);
                     break;
             }
         }

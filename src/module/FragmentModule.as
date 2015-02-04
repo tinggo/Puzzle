@@ -89,9 +89,9 @@ package module
             return _fragments;
         }
 
-        public function getOneBatchFragment():Vector.<Fragment>
+        public function getOneBatchFragment(count:int):Vector.<Fragment>
         {
-            var perFragmentCount:int = ConfigManager.getInstance().perTimeFragmentCount;
+            var perFragmentCount:int = count;
 
             var selectedFragment:Vector.<Fragment> = new Vector.<Fragment>();
             for (var i:int = 0; i < perFragmentCount; ++i)

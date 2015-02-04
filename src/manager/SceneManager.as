@@ -71,13 +71,13 @@ package manager
             }
             else if (data.curState == GameManager.GAME_STATE_GAME)
             {
-                addOneBatchOfFragment();
+                addOneBatchOfFragment(ConfigManager.getInstance().initFragmentCount);
             }
         }
 
-        public function addOneBatchOfFragment():void
+        public function addOneBatchOfFragment(fragmentCount:int):void
         {
-            var oneBatchFragment:Vector.<Fragment> = GameManager.getInstance().getOneBatchFragment();
+            var oneBatchFragment:Vector.<Fragment> = GameManager.getInstance().getOneBatchFragment(fragmentCount);
             _gameLayer.addNewFragments(oneBatchFragment);
         }
 

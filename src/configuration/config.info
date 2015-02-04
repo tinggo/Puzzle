@@ -1,13 +1,13 @@
 // One round time in second
 oneRoundTime=900
-// Image (full file name under asset/map/ folder)
-map=testMap.jpg
 // Grids (height*width)
 grid=4*4
 // Initialize money
 money=100
 // Purchase fees
 fee=100
+// initial count of piece fragment
+initFragmentCount=12
 // per time fragment count
 perTimeFragmentCount=10
 // per time purchase cost

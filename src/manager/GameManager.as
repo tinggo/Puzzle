@@ -3,6 +3,9 @@ package manager
     import event.GameEvent;
     import event.ParaEvent;
 
+    import flash.desktop.NativeApplication;
+    import flash.events.Event;
+
     import flash.events.TimerEvent;
 
     import flash.utils.Timer;
@@ -28,6 +31,7 @@ package manager
         private var _grids:Vector.<Grid> = new Vector.<Grid>();
 
         private var _timer:Timer;
+        private var _timeStr:String;
 
         public function GameManager()
         {
@@ -54,6 +58,8 @@ package manager
 
             Broadcaster.getInstance().addEventListener(LoginMenu.EVENT_LOGIN, onLogin);
             Broadcaster.getInstance().addEventListener(GameEvent.BUY_FRAGMENTS, onBuyFragment);
+
+            NativeApplication.nativeApplication.addEventListener(Event.EXITING, onAppExisting);
         }
 
         public function resetGame():void
@@ -136,6 +142,9 @@ package manager
             }
             else if (state == GAME_STATE_GAME)
             {
+                LogManager.getInstance().reset();
+                LogManager.getInstance().cacheString(PlayerManager.getInstance().playerAge);
+                LogManager.getInstance().cacheString(PlayerManager.getInstance().playerSex == 1 ? "Male" : "Female");
                 _timer.reset();
                 _timer.start();
             }
@@ -143,6 +152,9 @@ package manager
             {
                 _timer.stop();
                 SceneManager.getInstance().showMsg("Mission Accomplish!", 1, ["OK"], [missionComplete]);
+
+                LogManager.getInstance().cacheString(_timeStr + " COMPLETE");
+                LogManager.getInstance().writeCache();
             }
             var data:Object = {prevState:_state, curState:state};
             _state = state;
@@ -150,16 +162,26 @@ package manager
             dispatchEvent(new GameEvent(GameEvent.GAME_STATE_CHANGED, data));
         }
 
-        public function getOneBatchFragment():Vector.<Fragment>
+        private function onAppExisting(e:Event):void
         {
-            return _fragmentModule.getOneBatchFragment();
+            if (_state == GAME_STATE_GAME)
+            {
+                LogManager.getInstance().cacheString(_timeStr + " GIVEUP");
+                LogManager.getInstance().writeCache();
+            }
+        }
+
+        public function getOneBatchFragment(count:int):Vector.<Fragment>
+        {
+            return _fragmentModule.getOneBatchFragment(count);
         }
 
         private function onLogin(e:ParaEvent):void
         {
             var obj:Object = e.myPara;
-            PlayerManager.getInstance().playerName = obj.name;
+            PlayerManager.getInstance().playerAge = obj.age;
             PlayerManager.getInstance().playerSex = obj.isMale ? 1 : 0;
+            PlayerManager.getInstance().isTest = obj.isTest;
             PlayerManager.getInstance().money = ConfigManager.getInstance().money;
             SceneManager.getInstance().updateMoney(PlayerManager.getInstance().money);
             PlayerManager.getInstance().playedTime = 0;
@@ -173,7 +195,8 @@ package manager
             {
                 PlayerManager.getInstance().money -= perTimePurchase;
                 SceneManager.getInstance().updateMoney(PlayerManager.getInstance().money);
-                SceneManager.getInstance().addOneBatchOfFragment();
+                LogManager.getInstance().cacheString(_timeStr + " BUY");
+                SceneManager.getInstance().addOneBatchOfFragment(ConfigManager.getInstance().perTimeFragmentCount);
             }
             else
             {
@@ -202,6 +225,7 @@ package manager
                 secStr = "0" + secStr;
             }
             var time:String = minStr + ":" + secStr;
+            _timeStr = time;
             SceneManager.getInstance().setTime(time);
         }
 
