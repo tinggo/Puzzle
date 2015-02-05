@@ -1,7 +1,7 @@
 // One round time in second
 oneRoundTime=900
 // Grids (height*width)
-grid=4*4
+grid=8*9
 // Initialize money
 money=100
 // Purchase fees

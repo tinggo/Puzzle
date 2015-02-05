@@ -7,6 +7,7 @@ package module
 
     import manager.AssetManager;
     import manager.ConfigManager;
+    import manager.SceneManager;
 
     import object.Fragment;
 
@@ -58,8 +59,8 @@ package module
             rect.height = perHeight;
             for (var i:int = 0; i < totalCount; ++i)
             {
-                var xIndex:int = Math.floor(i % gridX);
-                var yIndex:int = Math.floor(i / gridY);
+                var xIndex:int = i % gridX;
+                var yIndex:int = (i - xIndex) / gridX;
                 rect.x = xIndex * perWidth;
                 rect.y = yIndex * perHeight;
                 var fragmentBp:Bitmap = new Bitmap();
@@ -72,7 +73,14 @@ package module
                 aFragment.scaleY = fragmentScaleY;
                 _fragments.push(aFragment);
                 _freeFragments.push(aFragment);
+
+                // For debugging
+                //SceneManager.s_stage.addChild(aFragment);
+                //aFragment.x = perWidth*fragmentScaleX * xIndex;
+                //aFragment.y = perHeight*fragmentScaleY * yIndex;
             }
+
+
         }
 
         public function getOrderedFragment(index:int):Fragment
