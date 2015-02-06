@@ -11,6 +11,9 @@ package manager
         public var money:Number;
         public var isTest:Boolean = false;
 
+        public var costTotal:Number;
+        public var buyTotal:int;
+
         public function PlayerManager()
         {
             super();

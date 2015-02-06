@@ -41,7 +41,6 @@ package menu
             myCancelBtn.label = LocManager.getLoc("CANCEL");
 
             myTitle = mc.myTitle;
-            myTitle.text = LocManager.getLoc("BUY_PROMPT");
 
             myMoney = mc.myMoney;
             myCount = mc.myCount;
@@ -55,6 +54,7 @@ package menu
         {
             myMoney.text = "";
             myCount.text = "";
+            myTitle.text = LocManager.getLoc("BUY_PROMPT", [String(GameManager.getInstance().getFreeFragmentCount())]);
             _count = 0;
             _money = 0;
         }

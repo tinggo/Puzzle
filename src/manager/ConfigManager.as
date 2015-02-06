@@ -23,6 +23,7 @@ package manager
         public var perTimeFragmentCount:int;
         public var perTimePurchase:int;
         public var perFragmentPrice:Number;
+        public var testOneRoundTime:int;
 
         private static var s_instance:ConfigManager;
 
@@ -96,6 +97,9 @@ package manager
                     break;
                 case "perFragmentPrice":
                     this.perFragmentPrice = Number(value);
+                    break;
+                case "testOneRoundTime":
+                    this.testOneRoundTime = int(value);
                     break;
             }
         }

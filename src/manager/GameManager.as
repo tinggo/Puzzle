@@ -85,8 +85,8 @@ package manager
             for (var i:int = 0; i < totalCount; ++i)
             {
                 var grid:Grid = new Grid();
-                grid.indexX = Math.floor(i % gridX);
-                grid.indexY = Math.floor(i / gridY);
+                grid.indexX = i % gridX;
+                grid.indexY = (i - grid.indexX) / gridX;
                 grid.posX =  ConfigManager.AREA_X + grid.indexX * perWidth;
                 grid.posY = ConfigManager.AREA_Y + grid.indexY * perHeight;
                 grid.width = perWidth;
@@ -153,18 +153,28 @@ package manager
             else if (state == GAME_STATE_END)
             {
                 _timer.stop();
-                if (_isSuccess)
+                if (PlayerManager.getInstance().isTest == false)
                 {
-                    SceneManager.getInstance().showMsg(LocManager.getLoc("MISSION_COMPLETE"), 1, [LocManager.getLoc("OK")], [missionComplete]);
-                    LogManager.getInstance().cacheString(_timeStr + " COMPLETE");
-                    LogManager.getInstance().writeCache();
+                    if (_isSuccess)
+                    {
+                        SceneManager.getInstance().showMsg(LocManager.getLoc("MISSION_COMPLETE"), 1, [LocManager.getLoc("OK")], [missionComplete]);
+                        LogManager.getInstance().cacheString(_timeStr + " COMPLETE");
+                        LogManager.getInstance().writeCache();
+                    }
+                    else
+                    {
+                        SceneManager.getInstance().showMsg(LocManager.getLoc("TIMES_UP"), 1, [LocManager.getLoc("OK")], [missionComplete]);
+                        LogManager.getInstance().cacheString(_timeStr + " FAILED");
+                        LogManager.getInstance().writeCache();
+                    }
                 }
                 else
                 {
-                    SceneManager.getInstance().showMsg(LocManager.getLoc("TIMES_UP"), 1, [LocManager.getLoc("OK")], [missionComplete]);
-                    LogManager.getInstance().cacheString(_timeStr + " FAILED");
-                    LogManager.getInstance().writeCache();
+                    SceneManager.getInstance().showMsg(LocManager.getLoc("TEST_COMPLETE"), 1, [LocManager.getLoc("OK")], [missionComplete]);
                 }
+
+                LogManager.getInstance().cacheString("BUY: " + String(PlayerManager.getInstance().buyTotal));
+                LogManager.getInstance().cacheString("COST: " + String(PlayerManager.getInstance().costTotal));
             }
             var data:Object = {prevState:_state, curState:state};
             _state = state;
@@ -200,6 +210,8 @@ package manager
             PlayerManager.getInstance().money = ConfigManager.getInstance().money;
             SceneManager.getInstance().updateMoney(PlayerManager.getInstance().money);
             PlayerManager.getInstance().playedTime = 0;
+            PlayerManager.getInstance().buyTotal = 0;
+            PlayerManager.getInstance().costTotal = 0;
             jumpToState(GAME_STATE_GAME);
         }
 
@@ -212,6 +224,8 @@ package manager
                 PlayerManager.getInstance().money -= money;
                 SceneManager.getInstance().updateMoney(PlayerManager.getInstance().money);
                 LogManager.getInstance().cacheString(_timeStr + " BUY: " + String(count) + " COST: " + String(money));
+                PlayerManager.getInstance().buyTotal += count;
+                PlayerManager.getInstance().costTotal += money;
                 SceneManager.getInstance().addOneBatchOfFragment(count);
             }
             else
@@ -243,10 +257,21 @@ package manager
             var time:String = minStr + ":" + secStr;
             _timeStr = time;
             SceneManager.getInstance().setTime(time);
-            if (currentSecond >= ConfigManager.getInstance().oneRoundTime)
+            if (PlayerManager.getInstance().isTest == false)
             {
-                _isSuccess = false;
-                jumpToState(GAME_STATE_END);
+                if (currentSecond >= ConfigManager.getInstance().oneRoundTime)
+                {
+                    _isSuccess = false;
+                    jumpToState(GAME_STATE_END);
+                }
+            }
+            else
+            {
+                if (currentSecond >= ConfigManager.getInstance().testOneRoundTime)
+                {
+                    _isSuccess = false;
+                    jumpToState(GAME_STATE_END);
+                }
             }
         }
 

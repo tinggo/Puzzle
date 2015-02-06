@@ -6,7 +6,7 @@ INVALID_AGE,年龄必须在10-50岁之间
 INSUFF_FUND,钱不够了
 BUY,购买
 MONEY,余额
-BUY_PROMPT,请输入要购买多少块
+BUY_PROMPT,请输入要购买多少块。还剩下&0块
 TIMES_UP,很遗憾，您没有按规定完成本智力拼图游戏!
 MISSION_COMPLETE,任务完成
 INTRO,您好！欢迎您参加本实验。本实验不涉及任何隐私问题，您的实验结果仅用于研究，并且我们对实验结果严格保密，请您放心实验!
@@ -14,3 +14,4 @@ INVALID_COUNT,请输入有效的数量
 PURCHASE_CONFIRM,总共花费&0元，确认购买？
 TOO_MANY,剩余没这么多了
 NO_MONEY,余额不足
+TEST_COMPLETE,试玩结束
