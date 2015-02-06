@@ -5,6 +5,9 @@ package object
     import flash.events.MouseEvent;
 
     import manager.Broadcaster;
+    import manager.LocManager;
+    import manager.SceneManager;
+    import manager.SceneManager;
 
     import manager.SceneManager;
 
@@ -25,14 +28,14 @@ package object
             _timeBar = new timeBar();
             addChild(_timeBar);
             _buyButton = new Button(_timeBar.myBuyBtn);
-            _buyButton.label = "BUY";
+            _buyButton.label = LocManager.getLoc("BUY");
             addChild(_buyButton);
             _buyButton.addEventListener(MouseEvent.CLICK, onBuyButtonClicked);
         }
 
         private function onBuyButtonClicked(e:MouseEvent):void
         {
-            SceneManager.getInstance().showMsg("Buy more fragments?", 2, ["Yes", "No"], [yesCallback, noCallback]);
+            SceneManager.getInstance().showPurchase();
         }
 
         private function yesCallback():void
@@ -46,9 +49,9 @@ package object
             SceneManager.getInstance().hideMsg();
         }
 
-        public function updateMoney(value:int):void
+        public function updateMoney(value:Number):void
         {
-            _timeBar.mcMoney.text = "Money:" + String(value);
+            _timeBar.mcMoney.text = LocManager.getLoc("MONEY") + String(value);
         }
 
         public function setTime(time:String):void

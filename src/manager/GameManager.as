@@ -32,6 +32,7 @@ package manager
 
         private var _timer:Timer;
         private var _timeStr:String;
+        private var _isSuccess:Boolean = false;
 
         public function GameManager()
         {
@@ -123,6 +124,7 @@ package manager
 
             if (isSuccess)
             {
+                _isSuccess = true;
                 jumpToState(GAME_STATE_END);
             }
         }
@@ -151,10 +153,18 @@ package manager
             else if (state == GAME_STATE_END)
             {
                 _timer.stop();
-                SceneManager.getInstance().showMsg("Mission Accomplish!", 1, ["OK"], [missionComplete]);
-
-                LogManager.getInstance().cacheString(_timeStr + " COMPLETE");
-                LogManager.getInstance().writeCache();
+                if (_isSuccess)
+                {
+                    SceneManager.getInstance().showMsg(LocManager.getLoc("MISSION_COMPLETE"), 1, [LocManager.getLoc("OK")], [missionComplete]);
+                    LogManager.getInstance().cacheString(_timeStr + " COMPLETE");
+                    LogManager.getInstance().writeCache();
+                }
+                else
+                {
+                    SceneManager.getInstance().showMsg(LocManager.getLoc("TIMES_UP"), 1, [LocManager.getLoc("OK")], [missionComplete]);
+                    LogManager.getInstance().cacheString(_timeStr + " FAILED");
+                    LogManager.getInstance().writeCache();
+                }
             }
             var data:Object = {prevState:_state, curState:state};
             _state = state;
@@ -176,6 +186,11 @@ package manager
             return _fragmentModule.getOneBatchFragment(count);
         }
 
+        public function getFreeFragmentCount():int
+        {
+            return _fragmentModule.getFreeFragmentCount();
+        }
+
         private function onLogin(e:ParaEvent):void
         {
             var obj:Object = e.myPara;
@@ -190,17 +205,18 @@ package manager
 
         private function onBuyFragment(e:GameEvent):void
         {
-            var perTimePurchase:int = ConfigManager.getInstance().perTimePurchase;
-            if (perTimePurchase <= PlayerManager.getInstance().money)
+            var count:int = e.myPara["count"];
+            var money:Number = e.myPara["money"];
+            if (money <= PlayerManager.getInstance().money)
             {
-                PlayerManager.getInstance().money -= perTimePurchase;
+                PlayerManager.getInstance().money -= money;
                 SceneManager.getInstance().updateMoney(PlayerManager.getInstance().money);
-                LogManager.getInstance().cacheString(_timeStr + " BUY");
-                SceneManager.getInstance().addOneBatchOfFragment(ConfigManager.getInstance().perTimeFragmentCount);
+                LogManager.getInstance().cacheString(_timeStr + " BUY: " + String(count) + " COST: " + String(money));
+                SceneManager.getInstance().addOneBatchOfFragment(count);
             }
             else
             {
-                SceneManager.getInstance().showMsg("Insufficient Funds", 1, ["OK"], [okClicked]);
+                SceneManager.getInstance().showMsg(LocManager.getLoc("NO_MONEY"), 1, [LocManager.getLoc("OK")], [okClicked]);
             }
         }
 
@@ -227,6 +243,11 @@ package manager
             var time:String = minStr + ":" + secStr;
             _timeStr = time;
             SceneManager.getInstance().setTime(time);
+            if (currentSecond >= ConfigManager.getInstance().oneRoundTime)
+            {
+                _isSuccess = false;
+                jumpToState(GAME_STATE_END);
+            }
         }
 
     }

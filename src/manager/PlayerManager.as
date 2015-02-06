@@ -8,7 +8,7 @@ package manager
         public var playerAge:String = "";
         public var playerSex:int;
         public var playedTime:int = 0;
-        public var money:int;
+        public var money:Number;
         public var isTest:Boolean = false;
 
         public function PlayerManager()

@@ -8,6 +8,7 @@ package
     import manager.AssetManager;
     import manager.ConfigManager;
     import manager.GameManager;
+    import manager.LocManager;
     import manager.LogManager;
     import manager.SceneManager;
 
@@ -25,18 +26,23 @@ package
         {
             // Load config file
             ConfigManager.getInstance().loadConfig();
+            ConfigManager.getInstance().addEventListener(Event.COMPLETE, onConfigLoadComplete);
+        }
 
-            AssetManager.getInstance().load(["asset/map/world.jpg"], bitmapLoadComplete);
-
-            // TODO: Load sfx
-            SceneManager.s_stage = this.stage;
-            SceneManager.getInstance().init();
-            // TODO: Start game work flow
+        private function onConfigLoadComplete(e:Event):void
+        {
+            LocManager.getInstance().loadLoc();
+            LocManager.getInstance().addEventListener(Event.COMPLETE, onLocLoadComplete);
         }
 
         private function bitmapLoadComplete():void
         {
             onResourceLoadComplete();
+        }
+
+        private function onLocLoadComplete(e:Event):void
+        {
+            AssetManager.getInstance().load(["asset/map/world.jpg"], bitmapLoadComplete);
         }
 
         private function onAddedToStage(e:Event):void
@@ -49,6 +55,10 @@ package
 
         private function onResourceLoadComplete():void
         {
+            // TODO: Load sfx
+            SceneManager.s_stage = this.stage;
+            SceneManager.getInstance().init();
+            // TODO: Start game work flow
             GameManager.getInstance().init();
             GameManager.getInstance().resetGame();
         }

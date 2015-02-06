@@ -119,5 +119,10 @@ package module
             return selectedFragment;
         }
 
+        public function getFreeFragmentCount():int
+        {
+            return _freeFragments.length
+        }
+
     }
 }

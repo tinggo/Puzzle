@@ -1,9 +1,9 @@
 // One round time in second
 oneRoundTime=900
 // Grids (height*width)
-grid=8*9
+grid=4*4
 // Initialize money
-money=100
+money=0.2
 // Purchase fees
 fee=100
 // initial count of piece fragment
@@ -12,3 +12,5 @@ initFragmentCount=12
 perTimeFragmentCount=10
 // per time purchase cost
 perTimePurchase=10
+// per fragment price
+perFragmentPrice=0.2

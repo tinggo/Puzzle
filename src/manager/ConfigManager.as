@@ -1,5 +1,7 @@
 package manager
 {
+    import flash.events.Event;
+
     import manager.BaseManager;
 
     public class ConfigManager extends BaseManager
@@ -15,11 +17,12 @@ package manager
         public var oneRoundTime:int;
         public var gridX:int;
         public var gridY:int;
-        public var money:int;
+        public var money:Number;
         public var fee:int;
         public var initFragmentCount:int;
         public var perTimeFragmentCount:int;
         public var perTimePurchase:int;
+        public var perFragmentPrice:Number;
 
         private static var s_instance:ConfigManager;
 
@@ -46,6 +49,7 @@ package manager
         {
             var configContent:String = content as String;
             anysicsConfig(configContent);
+            dispatchEvent(new Event(Event.COMPLETE));
         }
 
         private function anysicsConfig(rawConfig:String):void
@@ -76,7 +80,7 @@ package manager
                     this.gridX = int(value.split("*")[1]);
                     break;
                 case "money":
-                    this.money = int(value);
+                    this.money = Number(value);
                     break;
                 case "fee":
                     this.fee = int(value);
@@ -89,6 +93,9 @@ package manager
                     break;
                 case "initFragmentCount":
                     this.initFragmentCount = int(value);
+                    break;
+                case "perFragmentPrice":
+                    this.perFragmentPrice = Number(value);
                     break;
             }
         }

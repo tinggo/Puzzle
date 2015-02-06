@@ -86,12 +86,17 @@ package manager
             _uiLayer.showPopup(message, btnCount, label, callback);
         }
 
+        public function showPurchase():void
+        {
+            _uiLayer.showPurchase();
+        }
+
         public function hideMsg():void
         {
             _uiLayer.hidePopup();
         }
 
-        public function updateMoney(value:int):void
+        public function updateMoney(value:Number):void
         {
              _hudLayer.updateMoney(value);
         }
