@@ -159,22 +159,21 @@ package manager
                     {
                         SceneManager.getInstance().showMsg(LocManager.getLoc("MISSION_COMPLETE"), 1, [LocManager.getLoc("OK")], [missionComplete]);
                         LogManager.getInstance().cacheString(_timeStr + " COMPLETE");
-                        LogManager.getInstance().writeCache();
                     }
                     else
                     {
                         SceneManager.getInstance().showMsg(LocManager.getLoc("TIMES_UP"), 1, [LocManager.getLoc("OK")], [missionComplete]);
                         LogManager.getInstance().cacheString(_timeStr + " FAILED");
-                        LogManager.getInstance().writeCache();
                     }
+                    LogManager.getInstance().cacheString("BUY TOTAL: " + String(PlayerManager.getInstance().buyTotal));
+                    LogManager.getInstance().cacheString("COST TOTAL: " + String(PlayerManager.getInstance().costTotal));
+                    LogManager.getInstance().cacheString("REMAIN TOTAL: " + Number(ConfigManager.getInstance().money - PlayerManager.getInstance().costTotal).toFixed(1));
+                    LogManager.getInstance().writeCache();
                 }
                 else
                 {
                     SceneManager.getInstance().showMsg(LocManager.getLoc("TEST_COMPLETE"), 1, [LocManager.getLoc("OK")], [missionComplete]);
                 }
-
-                LogManager.getInstance().cacheString("BUY: " + String(PlayerManager.getInstance().buyTotal));
-                LogManager.getInstance().cacheString("COST: " + String(PlayerManager.getInstance().costTotal));
             }
             var data:Object = {prevState:_state, curState:state};
             _state = state;
@@ -187,6 +186,9 @@ package manager
             if (_state == GAME_STATE_GAME)
             {
                 LogManager.getInstance().cacheString(_timeStr + " GIVEUP");
+                LogManager.getInstance().cacheString("BUY TOTAL: " + String(PlayerManager.getInstance().buyTotal));
+                LogManager.getInstance().cacheString("COST TOTAL: " + String(PlayerManager.getInstance().costTotal));
+                LogManager.getInstance().cacheString("REMAIN TOTAL: " + Number(ConfigManager.getInstance().money - PlayerManager.getInstance().costTotal).toFixed(1));
                 LogManager.getInstance().writeCache();
             }
         }
@@ -222,6 +224,7 @@ package manager
             if (money <= PlayerManager.getInstance().money)
             {
                 PlayerManager.getInstance().money -= money;
+                PlayerManager.getInstance().money = Number(PlayerManager.getInstance().money.toFixed(1));
                 SceneManager.getInstance().updateMoney(PlayerManager.getInstance().money);
                 LogManager.getInstance().cacheString(_timeStr + " BUY: " + String(count) + " COST: " + String(money));
                 PlayerManager.getInstance().buyTotal += count;

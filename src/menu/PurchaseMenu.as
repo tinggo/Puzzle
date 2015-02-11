@@ -54,7 +54,18 @@ package menu
         {
             myMoney.text = "";
             myCount.text = "";
-            myTitle.text = LocManager.getLoc("BUY_PROMPT", [String(GameManager.getInstance().getFreeFragmentCount())]);
+
+            var freeFragmentCount:int = GameManager.getInstance().getFreeFragmentCount();
+            var leastFragmentThreshold:int = ConfigManager.getInstance().leastFragmentThreshold;
+
+            if (freeFragmentCount <= leastFragmentThreshold)
+            {
+                myTitle.text = LocManager.getLoc("BUY_PROMPT", [String(freeFragmentCount)]);
+            }
+            else
+            {
+                myTitle.text = LocManager.getLoc("LEAST_PURCHASE_HINT");
+            }
             _count = 0;
             _money = 0;
         }
@@ -65,14 +76,23 @@ package menu
             var isValid:Boolean = false;
             if (!isNaN(count))
             {
-                if (count > 0 && count <= GameManager.getInstance().getFreeFragmentCount())
+                var freeFragmentCount:int = GameManager.getInstance().getFreeFragmentCount();
+                var leastFragmentThreshold:int = ConfigManager.getInstance().leastFragmentThreshold;
+
+                var thresholdValue:int = 0;
+                if (freeFragmentCount > leastFragmentThreshold)
+                {
+                    thresholdValue = leastFragmentThreshold;
+                }
+
+                if (count >= thresholdValue && count <= GameManager.getInstance().getFreeFragmentCount())
                 {
                     var money:Number = ConfigManager.getInstance().perFragmentPrice * count;
                     _count = count;
-                    _money = money;
-                    if (money <= PlayerManager.getInstance().money)
+                    _money = Number(money.toFixed(2));
+                    if (_money <= PlayerManager.getInstance().money)
                     {
-                        SceneManager.getInstance().showMsg(LocManager.getLoc("PURCHASE_CONFIRM", [money]), 2, [LocManager.getLoc("OK"), LocManager.getLoc("CANCEL")], [okClicked, cancelClicked]);
+                        SceneManager.getInstance().showMsg(LocManager.getLoc("PURCHASE_CONFIRM", [_money]), 2, [LocManager.getLoc("OK"), LocManager.getLoc("CANCEL")], [okClicked, cancelClicked]);
                     }
                     else
                     {

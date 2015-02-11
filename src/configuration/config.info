@@ -1,11 +1,11 @@
 // One round time in second
 oneRoundTime=900
 // Test one round time in second
-testOneRoundTime=60
+testOneRoundTime=120
 // Grids (height*width)
-grid=8*9
+grid=10*10
 // Initialize money
-money=24
+money=30
 // Purchase fees
 fee=100
 // initial count of piece fragment
@@ -16,3 +16,5 @@ perTimeFragmentCount=10
 perTimePurchase=10
 // per fragment price
 perFragmentPrice=0.3
+// the least fragment purchase threshold
+leastFragmentThreshold=15

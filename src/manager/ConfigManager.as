@@ -24,6 +24,7 @@ package manager
         public var perTimePurchase:int;
         public var perFragmentPrice:Number;
         public var testOneRoundTime:int;
+        public var leastFragmentThreshold:int;
 
         private static var s_instance:ConfigManager;
 
@@ -100,6 +101,9 @@ package manager
                     break;
                 case "testOneRoundTime":
                     this.testOneRoundTime = int(value);
+                    break;
+                case "leastFragmentThreshold":
+                    this.leastFragmentThreshold = int(value);
                     break;
             }
         }
